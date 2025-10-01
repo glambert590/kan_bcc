@@ -26,3 +26,4 @@ jobs:
         with:
           push: true
           tags: glambert590/kan_bcc:1.0.0
+          context: ./apps/web/
