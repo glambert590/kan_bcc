@@ -7,11 +7,13 @@ FROM node:${NODE_VERSION}-alpine AS alpine
 RUN apk update
 RUN apk add --no-cache libc6-compat python3 make g++
 
+
 # Setup pnpm and turbo on the alpine base
 FROM alpine AS base
 RUN corepack enable
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN npm install turbo@2.1.3 --global
+RUN npm install pnpm@9.14.2 --global
 RUN npm install turbo@2.3.1 --global
 
 RUN pnpm config set store-dir ~/.pnpm-store
