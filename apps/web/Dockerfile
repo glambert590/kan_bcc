@@ -6,7 +6,7 @@ ARG PROJECT=@kan/web
 FROM node:${NODE_VERSION}-alpine AS base
 RUN apk update && apk add --no-cache libc6-compat python3 make g++
 RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
-RUN corepack prepare turbo@2.3.1 --activate
+RUN npm install -g turbo@2.3.1
 
 
 # Setup pnpm and turbo on the alpine base
