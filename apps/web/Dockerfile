@@ -5,7 +5,7 @@ ARG PROJECT=@kan/web
 # 1. Alpine image
 FROM node:${NODE_VERSION}-alpine AS base
 RUN apk update && apk add --no-cache libc6-compat python3 make g++
-RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
+RUN corepack enable && corepack prepare pnpm@9.14.2 turbo@2.3.1 --activate
 
 
 # Setup pnpm and turbo on the alpine base
