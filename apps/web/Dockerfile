@@ -66,6 +66,7 @@ RUN pnpm build --filter=${PROJECT}
 FROM base AS runner
 ARG APP_DIRNAME
  
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
