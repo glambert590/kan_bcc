@@ -73,6 +73,28 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
+        
+      - name: Debug - List files and check Dockerfile
+        run: |
+          echo "=== Current directory structure ==="
+          ls -la
+          echo "=== Checking Dockerfile ==="
+          if [ -f "apps/web/Dockerfile" ]; then
+            echo "✅ Dockerfile found at apps/web/Dockerfile"
+            echo "=== Dockerfile content ==="
+            cat apps/web/Dockerfile
+          else
+            echo "❌ Dockerfile NOT found at apps/web/Dockerfile"
+            echo "=== Searching for Dockerfiles ==="
+            find . -name "Dockerfile" -type f
+            exit 1
+          fi
+
+      - name: Debug - Check turbo availability
+        run: |
+          echo "=== Checking if turbo is available ==="
+          # Esto simula lo que pasará en el contenedor
+          docker run --rm -t node:20-alpine sh -c "npm install -g turbo@2.3.1 && turbo --version"
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -88,6 +110,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          no-cache: false
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
