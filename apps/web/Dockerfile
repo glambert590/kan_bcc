@@ -3,18 +3,16 @@ ARG APP_DIRNAME=web
 ARG PROJECT=@kan/web
 
 # 1. Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
-RUN apk update
-RUN apk add --no-cache libc6-compat python3 make g++
+FROM node:${NODE_VERSION}-alpine AS base
+RUN apk update && apk add --no-cache libc6-compat python3 make g++
+RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine AS base
+# RUN corepack enable
 # Replace <your-major-version> with the major version installed in your repository. For example:
 # RUN npm install turbo@2.1.3 --global
-RUN corepack enable
-RUN corepack prepare pnpm@9.14.2 --activate
-RUN corepack prepare turbo@2.3.1 --activate
+# RUN npm install turbo@2.3.1 --global
 
 RUN pnpm config set store-dir ~/.pnpm-store
 
@@ -67,7 +65,6 @@ RUN pnpm build --filter=${PROJECT}
 FROM base AS runner
 ARG APP_DIRNAME
  
-RUN corepack enable && corepack prepare pnpm@9.14.2 --activate
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
